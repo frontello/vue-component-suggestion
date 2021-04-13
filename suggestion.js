@@ -2,7 +2,7 @@
 
 Vue.component('suggestion', {
 	template: `
-	<div :class="suggestionContainerClass" v-bind:class="[suggestions.length > 0 ? suggestionActivatedClass : '']">
+	<div v-bind:class="[suggestions.length > 0 ? [suggestionContainerClass, suggestionActivatedClass] : suggestionContainerClass]">
 		<input :type="type" :name="name" :placeholder="placeholder" v-model="search" :autocomplete="autocomplete" v-on:keyup="keyboardHandle" v-on:search="keyboardHandle" v-focus>
 		<ul v-if="suggestions">
 			<li v-for="suggestion in suggestions" v-bind:class="{ selected: suggestion.selected }" v-on:click="chooseSuggestion(suggestion)">{{ suggestion.label }}</li>

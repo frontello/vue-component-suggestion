@@ -1,0 +1,10 @@
+/* Vue Suggestion */
+
+.vue-suggestion { width: 100%; max-width: 600px; position: relative; z-index: 99; box-shadow: 0px 0px 5px rgba(0,0,0,.35); border-radius: 20px; overflow: hidden; }
+.vue-suggestion.activated { border-radius: 5px; }
+.vue-suggestion input { position: relative; width: 100%; height: 40px; padding: 0 15px; border:none; border-radius: none; font-size: 18px; }
+.vue-suggestion ul { position: relative; z-index: -1; margin: 0; padding:0; border-radius:3px; }
+.vue-suggestion ul:not(:empty) { background: #eee; border: solid 5px #eee; }
+.vue-suggestion ul li { margin: 0; padding: 5px 10px; list-style: none; cursor: pointer; border-radius:2px; }
+.vue-suggestion ul li:hover { background: #f6f6f6; }
+.vue-suggestion ul li.selected { background: #1565C0; color: #fff; }

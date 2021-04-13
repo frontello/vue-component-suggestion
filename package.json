@@ -1,0 +1,19 @@
+{
+  "name": "vue-component-suggestion",
+  "version": "1.0.1",
+  "description": "Suggestion component for VueJS",
+  "main": "suggestion.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontello/vue-component-suggestion.git"
+  },
+  "author": "Lenny ROUANET",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frontello/vue-component-suggestion/issues"
+  },
+  "homepage": "https://github.com/frontello/vue-component-suggestion#readme"
+}

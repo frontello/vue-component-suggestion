@@ -1,4 +1,4 @@
-# Suggestion component for VueJS
+# Suggestion component for VueJS 3
 
 Easy to use.
 
@@ -10,46 +10,53 @@ Easy to use.
 
 Add these lines in the `<head>` tag :
 ```
-<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-<script src="./node_modules/vue-component-suggestion/suggestion.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
 <link rel="stylesheet" href="./node_modules/vue-component-suggestion/suggestion.css">
 
-<script>
+<script type="module">
+	import {suggestion} from './node_modules/vue-component-suggestion/suggestion.js';
+	
 	document.addEventListener('DOMContentLoaded', function () {
-		new Vue({ el: '#vue-app' });
-	});
-	
-	function loadSuggestions(search, callback) {
-		fetch('https://localhost/api/search' + escape(search))
-		.then((response) => {
-			return response.json();
-		})
-		.then((datas) => {
-			let results = [];
-			
-			datas.forEach( data => {
-				results.push({
-					label: data.label,
-					datas: data,
-				});
-			});
-			
-			callback(results);
-		})
-		.catch((err) => {
-			callback([]);
+		
+		const app = Vue.createApp({
+			components: {
+				'suggestion': suggestion
+			},
+			methods: {
+				loadSuggestions(search, callback) {
+					fetch('https://localhost/api/search' + escape(search))
+					.then((response) => {
+						return response.json();
+					})
+					.then((datas) => {
+						let results = [];
+						
+						datas.forEach( data => {
+							results.push({
+								label: data.label,
+								datas: data,
+							});
+						});
+						
+						callback(results);
+					})
+					.catch((err) => {
+						callback([]);
+					});
+				},
+				chooseSuggestion(search, datas) {
+					location.href = datas.link;
+				}
+			}
 		});
-	}
-	
-	function chooseSuggestion(search, datas) {
-		location.href = datas.link;
-	}
+		app.mount('#vue-app');
+	});
 </script>
 ```
 
 And this in the `<body>` tag :
 ```
 <div id="vue-app">
-	<suggestion name="search" placeholder="Enter your search" :load-suggestion-callback="loadSuggestions" :choose-suggestion-callback="chooseSuggestion"></suggestion>
+	<suggestion name="search" placeholder="Enter your search" @load-suggestion="loadSuggestions" @choose-suggestion="chooseSuggestion"></suggestion>
 </div>
 ```

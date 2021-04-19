@@ -1,41 +1,39 @@
 'use strict';
 
-Vue.component('suggestion', {
+const suggestion = {
 	template: `
 	<div v-bind:class="[suggestions.length > 0 ? [suggestionContainerClass, suggestionActivatedClass] : suggestionContainerClass]">
-		<input :type="type" :name="name" :placeholder="placeholder" v-model="search" :autocomplete="autocomplete" v-on:keyup="keyboardHandle" v-on:search="keyboardHandle" v-focus>
+		<input :type="type" :name="name" :placeholder="placeholder" :autocomplete="autocomplete" v-model="search" v-on:keyup="keyboardHandle" v-on:search="keyboardHandle" v-focus>
 		<ul v-if="suggestions">
 			<li v-for="suggestion in suggestions" v-bind:class="{ selected: suggestion.selected }" v-on:click="chooseSuggestion(suggestion)">{{ suggestion.label }}</li>
 		</ul>
 	</div>
-  `,
-	data: () => {
-		return {
-			currentSuggestion: null,
-			suggestions: [],
-			loadTimeout: null
-		}
-	},
+	`,
+	components: {},
+	emits: [
+		'loadSuggestion',
+		'chooseSuggestion'
+	],
 	props: {
+		type: {
+			type: String,
+			default: 'search'
+		},
 		name: {
 			type: String,
 			default: 'search'
 		},
 		placeholder: {
 			type: String,
-			default: 'search'
-		},
-		type: {
-			type: String,
-			default: 'search'
-		},
-		search: {
-			type: String,
-			default: ''
+			default: 'Enter your search'
 		},
 		autocomplete: {
 			type: String,
 			default: 'off'
+		},
+		value: {
+			type: String,
+			default: ''
 		},
 		loadSuggestionFromTheNumberOfCharacters: {
 			type: Number,
@@ -44,16 +42,6 @@ Vue.component('suggestion', {
 		loadSuggestionTimout: {
 			type: Number,
 			default: 100
-		},
-		loadSuggestionCallback: {
-			type: Function,
-			require: true,
-			default: null
-		},
-		chooseSuggestionCallback: {
-			type: Function,
-			require: true,
-			default: null
 		},
 		suggestionContainerClass: {
 			type: String,
@@ -76,15 +64,26 @@ Vue.component('suggestion', {
 			default: true
 		}
 	},
+	data() {
+		return {
+			search: '',
+			currentSuggestion: null,
+			suggestions: [],
+			loadTimeout: null
+		}
+	},
 	directives: {
 		focus: {
 			inserted: function (el) {
-				el.focus()
+				el.focus();
 			}
 		}
 	},
 	created () {
 		window.addEventListener('wheel', this.mouseHandle);
+	},
+	mounted() {
+		this.search = this.value;
 	},
 	destroyed () {
 		window.removeEventListener('wheel', this.mouseHandle);
@@ -97,7 +96,7 @@ Vue.component('suggestion', {
 			clearTimeout(this.loadTimeout);
 	
 			this.loadTimeout = setTimeout( () => {
-				this.loadSuggestionCallback(this.search, (suggestions) => {
+				this.$emit('loadSuggestion', this.search, (suggestions) => {
 					suggestions.forEach( suggestion => {
 						if (undefined === suggestion.selected) {
 							suggestion.selected = false;
@@ -122,7 +121,7 @@ Vue.component('suggestion', {
 		chooseSuggestion: function (suggestion) {
 			this.setCurrentSuggestion(suggestion);
 			this.closeSuggestionList();
-			this.chooseSuggestionCallback(suggestion.label, suggestion.datas);
+			this.$emit('chooseSuggestion', suggestion.label, suggestion.datas);
 		},
 		suggestionListNavigation: function(direction) {
 			if (this.currentSuggestion) {
@@ -206,4 +205,6 @@ Vue.component('suggestion', {
 			}
 		},
 	}
-});
+}
+
+export { suggestion };
